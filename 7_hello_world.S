@@ -11,29 +11,29 @@
  and the cursor re-appearing in the console. My guess is that the OS is NOT happy about what's going on and has
  to do some serious work to get back into a good state.
 
- The actual relevant code is the LEAQ (load effective address to quad word) and CALL. When we call a function,
- the ABI (application binary interface) defines which arguments should be put where, and this is platform dependent.
- On Windows, the first 4 integer or pointer arguments should be placed in RCX, RDX, R8 and R9.
- My source for this is https://stackoverflow.com/a/45940640 but the links there are dead, so who knows really.
+ The actual relevant code is the LEA (load effective address) and CALL. When we call a function, the ABI
+ (application binary interface) defines which arguments should be put where, and this is platform dependent.
+ On Windows, the first 4 integer or pointer arguments should be placed in RCX, RDX, R8 and R9. My source
+ for this is https://stackoverflow.com/a/45940640 but the links there are dead, so who knows really.
+
+ To build and run:
+    > gcc 7_hello_world.S -o hello.exe && hello
 */
   .globl main
-  .def printf
+  .globl printf
 message:
   .string "Hello, World!\0"
 main:
-  # Boilerplate for entering
-  pushq %rbp
-  movq %rsp, %rbp
-  subq $48, %rsp
+  # Allocate stack frame
+  sub $32, %rsp
 
   # RCX should hold the first argument to printf, so we load our message there and then call printf.
-  leaq (message), %rcx
+  lea (message), %rcx
   call printf
 
-  # Boilerplate for leaving.
-  addq $48, %rsp
-  popq %rbp
+  # Leave.
+  add $32, %rsp
 
   # Set error code to 0 (success) and return
-  movl $0, %eax
+  mov $0, %rax
   ret
