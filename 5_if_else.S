@@ -57,7 +57,6 @@
 
  The echo statement will print -6.
 */
-
   .globl main
 main:
   mov $-5, %rax
