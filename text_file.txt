@@ -1,0 +1,2 @@
+This is the first line of text_file.txt
+This is the second line of text_file.txt
